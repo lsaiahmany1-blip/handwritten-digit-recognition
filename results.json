@@ -1,0 +1,9 @@
+{
+  "dataset": "scikit-learn Digits (8x8 grayscale)",
+  "train_samples": 1437,
+  "test_samples": 360,
+  "epochs": 30,
+  "test_accuracy": 0.9694,
+  "test_accuracy_percent": 96.94,
+  "seed": 42
+}
