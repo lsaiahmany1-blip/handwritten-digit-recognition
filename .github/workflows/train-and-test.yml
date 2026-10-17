@@ -1,0 +1,39 @@
+name: Train and evaluate digit recognition model
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  training-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Train and evaluate
+        run: python train.py
+      - name: Verify four predictions
+        shell: bash
+        run: |
+          python predict.py --index 0
+          python predict.py --index 1
+          python predict.py --index 10
+          python predict.py --index 50
+      - name: Archive model and results
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-digit-model-and-results
+          path: |
+            digits_model.pth
+            results.json
+            sample_predictions.png
+          retention-days: 30
