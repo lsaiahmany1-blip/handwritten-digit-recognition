@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Interactive PyTorch deep learning digit recognition — draw a number and see a real neural network prediction.">
+  <title>DigitLab — Handwritten Digit Recognition AI</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+
+  <div class='ambient ambient-one'></div><div class='ambient ambient-two'></div>
+  <header class='site-header'>
+    <a href='#top' class='wordmark'><span class='brand-icon'>∿</span><span>Digit<span class='brand-accent'>Lab</span><small>NEURAL NETWORK PROJECT</small></span></a>
+    <nav><a href='#how-it-works'>How it works</a><a href='https://github.com/lsaiahmany1-blip/handwritten-digit-recognition' target='_blank' rel='noopener noreferrer'>Source code ↗</a></nav>
+    <span class='status'><span class='status-dot'></span><span id='model-status'>Checking model…</span></span>
+  </header>
+  <main id='top'>
+    <section class='hero'>
+      <div class='eyebrow'><span class='small-dot'></span> LIVE DEEP LEARNING DEMO <span class='line'></span> PYTORCH</div>
+      <h1>Draw a digit.<br/><span>Watch AI recognize it.</span></h1>
+      <p class='lead'>A real trained neural network. Ten possible digits. One tiny experiment in machine learning.</p>
+    </section>
+    <div class='lab-grid'>
+      <section class='card draw-panel'>
+        <div class='card-title'><span class='step'>01</span><div><h2>Your input</h2><p>Draw any digit from 0 to 9 with your mouse or finger.</p></div></div>
+        <div class='canvas-shell'>
+          <div class='canvas-header'><span>DRAWING CANVAS</span><span class='canvas-indicator'>● 8×8 neural input</span></div>
+          <div class='canvas-area'>
+            <canvas id='digit-canvas' width='280' height='280' aria-label='Draw a handwritten digit from zero to nine'></canvas>
+            <div class='canvas-corner tl'></div><div class='canvas-corner tr'></div><div class='canvas-corner bl'></div><div class='canvas-corner br'></div>
+          </div>
+          <div class='canvas-footer'><span id='canvas-message'>Draw a white digit on the dark canvas</span><button id='clear' class='text-button' type='button'>↺ Clear</button></div>
+        </div>
+        <div class='sample-row'><span>Or try a verified sample</span><div class='sample-buttons'>
+          <button data-sample='0' type='button'>5</button><button data-sample='1' type='button'>2</button><button data-sample='2' type='button'>0</button>
+        </div></div>
+        <button id='predict' class='primary-button' type='button'>Recognize digit <span>↗</span></button>
+        <p class='helper'>The drawing is processed locally into 8×8 grayscale pixels and evaluated by the trained model.</p>
+      </section>
+      <section class='card results-panel' aria-live='polite'>
+        <div class='card-title'><span class='step'>02</span><div><h2>Model prediction</h2><p>See the network’s real output probabilities.</p></div></div>
+        <div id='results-empty' class='results-empty'><div class='empty-symbol'>∿</div><h3>Waiting for a digit</h3><p>Draw on the canvas or choose a sample, then press Recognize digit.</p></div>
+        <div id='results-data' class='results-data hidden'>
+          <div class='prediction-hero'><div><div class='overline'>PREDICTED DIGIT</div><div id='predicted-digit' class='prediction-number'>—</div></div><div class='confidence-card'><div class='confidence-icon'>✦</div><strong id='confidence'>—%</strong><span>Model confidence*</span></div></div>
+          <div class='scores-heading'>Prediction probabilities <span>TOP 5</span></div>
+          <div id='scores' class='scores'></div>
+          <div id='sample-feedback' class='sample-feedback hidden'></div>
+          <p class='model-note'>*Confidence is the model's probability estimate, not a guarantee of correctness. Freehand drawings may differ from the training images.</p>
+        </div>
+        <div id='error-message' class='error-message hidden' role='alert'></div>
+      </section>
+    </div>
+    <section id='how-it-works' class='info-section'>
+      <div class='info-top'><div class='eyebrow'>BEHIND THE SCENES</div><h2>Small network.<br/><span>Real machine learning.</span></h2><p>Built with Python and PyTorch, then exported for live predictions. The same model architecture used in the training code performs the inference here.</p></div>
+      <div class='metrics'>
+        <div><strong>96.94<span>%</span></strong><small>Accuracy on held-out test images</small></div>
+        <div><strong>1,797</strong><small>Handwritten digit samples</small></div>
+        <div><strong>30</strong><small>Training epochs</small></div>
+        <div><strong>64<span>→</span>10</strong><small>Input pixels → output classes</small></div>
+      </div>
+      <div class='pipeline'><div><span>01</span>Input image<br/><small>8×8 grayscale</small></div><b>→</b><div><span>02</span>Neural layers<br/><small>64 → 64 → 32</small></div><b>→</b><div><span>03</span>Prediction<br/><small>10 digit classes</small></div></div>
+      <div class='limitations'><strong>About this demo</strong><p>Trained on the small scikit-learn Digits dataset. The 96.94% accuracy was measured on 360 held-out dataset images, not live user drawings. Freehand recognition is an experimental extension and may be less accurate because the handwriting style, size and preprocessing differ.</p><a href='https://github.com/lsaiahmany1-blip/handwritten-digit-recognition' target='_blank' rel='noopener noreferrer'>View the training code and methodology ↗</a></div>
+    </section>
+  </main>
+  <footer><span>DigitLab · A personal deep learning portfolio project</span><a href='https://github.com/lsaiahmany1-blip/handwritten-digit-recognition' target='_blank' rel='noopener noreferrer'>GitHub repository ↗</a></footer>
+
+</body>
+</html>
