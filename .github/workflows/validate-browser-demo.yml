@@ -1,0 +1,51 @@
+name: Validate browser digit demo
+on:
+  push:
+    paths:
+      - 'docs/**'
+      - '.github/workflows/validate-browser-demo.yml'
+  workflow_dispatch:
+
+jobs:
+  verify-static-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax and HTML presence
+        run: |
+          node --check docs/app.js
+          test -s docs/index.html
+          test -s docs/styles.css
+          test -s docs/model-web.json
+      - name: Check exported neural network against verified samples
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const src = fs.readFileSync('docs/app.js', 'utf8');
+          const found = src.match(/^const samples = (\[.*\]);$/m);
+          if (!found) throw new Error('Sample data missing from browser code');
+          const samples = JSON.parse(found[1]);
+          const model = JSON.parse(fs.readFileSync('docs/model-web.json','utf8'));
+          if (model.architecture.join(',') !== '64,64,32,10') throw new Error('Unexpected network');
+          function dense(input,weights,bias,relu) {
+            return weights.map((row,i) => {
+              let sum=bias[i];
+              for(let j=0;j<input.length;j++) sum+=row[j]*input[j];
+              return relu?Math.max(0,sum):sum;
+            });
+          }
+          for(const sample of samples) {
+            if(sample.pixels.length!==64) throw new Error('Invalid sample size');
+            const w=model.weights;
+            const a=dense(sample.pixels,w['0.weight'],w['0.bias'],true);
+            const b=dense(a,w['2.weight'],w['2.bias'],true);
+            const logits=dense(b,w['4.weight'],w['4.bias'],false);
+            const predicted=logits.indexOf(Math.max(...logits));
+            if(predicted!==sample.digit) throw new Error('Wrong sample prediction: '+sample.index);
+            console.log('PASS: sample '+sample.index+' predicted '+predicted);
+          }
+          NODE
