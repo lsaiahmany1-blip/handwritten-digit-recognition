@@ -1,0 +1,35 @@
+name: Export trained neural network for interactive website
+
+on:
+  push:
+    paths:
+      - '.github/workflows/export-web-model.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Python libraries
+        run: python -m pip install -r requirements.txt
+      - name: Train model and export weights
+        run: |
+          python train.py
+          python export_model.py
+      - name: Commit portable model
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add model-web.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: export PyTorch model weights for web demo'
+            git push
+          fi
