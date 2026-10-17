@@ -4,6 +4,16 @@ An introductory **AI / Deep Learning** portfolio project developed using Python,
 
 **Project status:** Model training and command-line predictions were successfully run on a Windows computer. A browser-based interactive demo is planned as the next step.
 
+## 🌐 Live interactive demo
+
+**[Try the live digit recognizer →](https://digitlab-handwritten-digit-recognition-6h1q9k.v2.appdeploy.ai/)**
+
+Draw a digit 0–9 with a mouse or finger (experimental freehand input), or click one of the **verified held-out examples** (5, 2, or 0). The web app calls a backend that executes **the actual 64→64→32→10 PyTorch network weights exported from this repository**, shows its predicted class and top probability scores, and labels the held-out test accuracy separately from freehand accuracy.
+
+[View the website and inference source](web-demo/) · [Exported model weights](model-web.json) · [Weight export script](export_model.py)
+
+**Important:** Freehand drawings can be less accurate than the held-out 8×8 Digits dataset images due to differences in input distribution. This is a learning demo, not production OCR.
+
 ## Verified training result
 
 | Metric | Result |
