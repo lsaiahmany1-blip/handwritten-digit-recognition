@@ -4,6 +4,14 @@ An introductory **AI / Deep Learning** portfolio project developed using Python,
 
 **Project status:** Model training and command-line predictions were successfully run on a Windows computer. A browser-based interactive demo is planned as the next step.
 
+## Free GitHub Pages version (custom domain ready)
+
+The `docs/` folder contains a **fully static, browser-side version** of the live digit recognizer. It uses the actual exported PyTorch weights included at `docs/model-web.json` and requires no external AI server or paid hosting.
+
+To publish it, open [Settings → Pages](https://github.com/lsaiahmany1-blip/handwritten-digit-recognition/settings/pages), choose **Deploy from a branch**, then select **main /docs** and **Save**. Once GitHub confirms publication, the default project URL will be `https://lsaiahmany1-blip.github.io/handwritten-digit-recognition/`.
+
+To use `ai.yarhiapps.com`, enter that name in the GitHub Pages **Custom domain** field, save, and create a **CNAME** record in IONOS: host `ai`, target `lsaiahmany1-blip.github.io` (not the AppDeploy proxy). Only do the DNS change after Pages is configured.
+
 ## 🌐 Live interactive demo
 
 **[Try the live digit recognizer →](https://digitlab-handwritten-digit-recognition-6h1q9k.v2.appdeploy.ai/)**
