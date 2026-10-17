@@ -211,39 +211,58 @@ document
   });
 function normalizeDrawing() {
   if (selectedSample) return selectedSample;
-  const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const p = image.data;
-  let minX = 280,
-    minY = 280,
-    maxX = -1,
-    maxY = -1;
-  for (let y = 0; y < 280; y++)
-    for (let x = 0; x < 280; x++) {
-      if (p[(y * 280 + x) * 4] > 32) {
+  const width = canvas.width;
+  const height = canvas.height;
+  const data = ctx.getImageData(0, 0, width, height).data;
+  let minX = width;
+  let minY = height;
+  let maxX = -1;
+  let maxY = -1;
+
+  // Locate visible white strokes rather than counting the background.
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      if (data[(y * width + x) * 4] > 24) {
         minX = Math.min(minX, x);
-        maxX = Math.max(maxX, x);
         minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x);
         maxY = Math.max(maxY, y);
       }
     }
+  }
+
   if (maxX < minX || maxY < minY) return null;
   const edge = Math.max(maxX - minX + 1, maxY - minY + 1);
-  const pad = Math.max(5, edge * 0.1);
-  const size = Math.min(280, edge + 2 * pad);
-  const cx = (minX + maxX) / 2;
-  const cy = (minY + maxY) / 2;
+  // A square crop with 10% breathing room retains the full handwritten digit.
+  const paddedSize = edge + 2 * Math.max(5, edge * 0.1);
+  const centerX = (minX + maxX) / 2;
+  const centerY = (minY + maxY) / 2;
+
   const small = document.createElement('canvas');
   small.width = 8;
   small.height = 8;
-  const g = small.getContext('2d')!;
-  g.fillStyle = 'black';
-  g.fillRect(0, 0, 8, 8);
-  g.imageSmoothingEnabled = true;
-  g.imageSmoothingQuality = 'high';
-  g.drawImage(canvas, cx - size / 2, cy - size / 2, size, size, 0.5, 0.5, 7, 7);
-  const data = g.getImageData(0, 0, 8, 8).data;
+  const smallContext = small.getContext('2d')!;
+  smallContext.fillStyle = '#000000';
+  smallContext.fillRect(0, 0, 8, 8);
+  smallContext.imageSmoothingEnabled = true;
+  smallContext.imageSmoothingQuality = 'high';
+  // Fill the entire 8x8 input instead of shrinking the drawing to 7x7
+  // and shifting it by half a pixel. This better matches the trained data.
+  smallContext.drawImage(
+    canvas,
+    centerX - paddedSize / 2,
+    centerY - paddedSize / 2,
+    paddedSize,
+    paddedSize,
+    0,
+    0,
+    8,
+    8,
+  );
+
+  const pixels = smallContext.getImageData(0, 0, 8, 8).data;
   return Array.from({ length: 64 }, (_, i) =>
-    Math.max(0, Math.min(1, data[i * 4] / 255))
+    Math.max(0, Math.min(1, pixels[i * 4] / 255))
   );
 }
 function displayResult(result: Prediction) {
