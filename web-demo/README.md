@@ -29,3 +29,7 @@ Training/test setup: scikit-learn Digits dataset, 1,437 train images and 360 hel
 ## Portfolio note
 
 Introductory self-learning project demonstrating Python, PyTorch, model training, reproducible evaluation, model export, web inference, and a responsive interactive demonstration.
+
+## Freehand input improvement (GitHub Pages version)
+
+The static site at `docs/` now processes each freehand drawing at **three slightly different centered crop scales** (10%, 16%, 22% margin) and averages the resulting **real neural-network softmax probabilities** before displaying a class. This reduces sensitivity to how tightly the digit was drawn. Verified held-out sample buttons remain single-pass predictions. This is a robustness experiment, **not a claimed or validated accuracy increase on arbitrary handwriting**; further testing and a larger handwriting dataset are still warranted.
