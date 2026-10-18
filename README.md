@@ -2,21 +2,19 @@
 
 An introductory **AI / Deep Learning** portfolio project developed using Python, PyTorch and scikit-learn. A small neural network classifies grayscale handwritten digits **0–9**.
 
-**Project status:** Model training and command-line predictions were successfully run on a Windows computer. A browser-based interactive demo is planned as the next step.
+**Project status:** Model training and command-line predictions ran on Windows, and the public browser-based interactive demo is live at **https://ai.yarhiapps.com**.
 
-## Free GitHub Pages version (custom domain ready)
+## Browser-side GitHub Pages demo
 
-The `docs/` folder contains a **fully static, browser-side version** of the live digit recognizer. It uses the actual exported PyTorch weights included at `docs/model-web.json` and requires no external AI server or paid hosting.
+The production demo is hosted at **https://ai.yarhiapps.com**, using GitHub Pages and the static site in [docs/](docs/). Predictions run in the browser with the **real PyTorch network weights** from [docs/model-web.json](docs/model-web.json); the site requires no paid AI inference server.
 
-To publish it, open [Settings → Pages](https://github.com/lsaiahmany1-blip/handwritten-digit-recognition/settings/pages), choose **Deploy from a branch**, then select **main /docs** and **Save**. Once GitHub confirms publication, the default project URL will be `https://lsaiahmany1-blip.github.io/handwritten-digit-recognition/`.
-
-To use `ai.yarhiapps.com`, enter that name in the GitHub Pages **Custom domain** field, save, and create a **CNAME** record in IONOS: host `ai`, target `lsaiahmany1-blip.github.io` (not the AppDeploy proxy). Only do the DNS change after Pages is configured.
+For freehand drawings only, the static site now averages the real model's probabilities from three slightly different input crop scales. This makes the experience less sensitive to the drawing's size, but it **does not establish a measured freehand accuracy**. Verified dataset examples use the original model input unchanged.
 
 ## 🌐 Live interactive demo
 
-**[Try the live digit recognizer →](https://digitlab-handwritten-digit-recognition-6h1q9k.v2.appdeploy.ai/)**
+**[Try the live digit recognizer →](https://ai.yarhiapps.com/)**
 
-Draw a digit 0–9 with a mouse or finger (experimental freehand input), or click one of the **verified held-out examples** (5, 2, or 0). The web app calls a backend that executes **the actual 64→64→32→10 PyTorch network weights exported from this repository**, shows its predicted class and top probability scores, and labels the held-out test accuracy separately from freehand accuracy.
+Draw a digit 0–9 with a mouse or finger (experimental freehand input), or click one of the **verified held-out examples** (5, 2, or 0). The production web app runs **the actual 64→64→32→10 PyTorch network weights exported from this repository directly in the browser**, shows its predicted class and top probability scores, and labels the held-out test accuracy separately from freehand accuracy.
 
 [View the website and inference source](web-demo/) · [Exported model weights](model-web.json) · [Weight export script](export_model.py)
 
