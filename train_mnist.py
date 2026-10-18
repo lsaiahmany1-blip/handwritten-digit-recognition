@@ -138,7 +138,7 @@ def main():
         "seed": SEED,
     }
     (ROOT / "docs" / "mnist-metrics.json").write_text(
-        json.dumps(report, indent=2) + "\\n", encoding="utf-8"
+        json.dumps(report, indent=2) + "\n", encoding="utf-8"
     )
     print(f"Exported: {output}, {output.stat().st_size} bytes",flush=True)
 
