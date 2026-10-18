@@ -20,6 +20,19 @@ Draw a digit 0–9 with a mouse or finger (experimental freehand input), or clic
 
 **Important:** Freehand drawings can be less accurate than the held-out 8×8 Digits dataset images due to differences in input distribution. This is a learning demo, not production OCR.
 
+## New: real handwriting model trained on MNIST
+
+Freehand input on [ai.yarhiapps.com](https://ai.yarhiapps.com) uses a **separate PyTorch model trained from scratch on the MNIST handwritten digit dataset** (28 × 28 pixel input, 784 → 256 → 128 → 10 dense network). Training code: [train_mnist.py](train_mnist.py). Full browser inference source: [docs/handwriting-mnist.js](docs/handwriting-mnist.js).
+
+| Dataset | Train / validation | Held-out test | Accuracy |
+|---|---:|---:|---:|
+| MNIST (freehand model) | 54,000 / 6,000 | 10,000 | **98.16% (9,816/10,000)** |
+| scikit-learn Digits (original verified samples) | 1,437 training | 360 | **96.94% (349/360)** |
+
+The models are evaluated separately: the MNIST number does **not** imply 98.16% accuracy on live browser drawings. Freehand images are cropped, recentered by center of mass, resized to a 28×28 grayscale input, and evaluated across three crop scales using the **actual trained weights**; softmax probabilities are averaged. The original model is retained for the verified built-in Digits samples. This is a genuine AI experiment, and mistakes are possible.
+
+New model: [docs/model-mnist.json](docs/model-mnist.json) · [Training metrics](docs/mnist-metrics.json) · [CI training workflow](.github/workflows/train-mnist.yml).
+
 ## Verified training result
 
 | Metric | Result |
