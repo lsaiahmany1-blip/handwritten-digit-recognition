@@ -1,0 +1,15 @@
+{
+  "dataset": "MNIST (28x28 grayscale handwriting)",
+  "training_samples": 54000,
+  "validation_samples": 6000,
+  "test_samples": 10000,
+  "test_correct": 9816,
+  "test_accuracy": 0.9816,
+  "architecture": [
+    784,
+    256,
+    128,
+    10
+  ],
+  "seed": 42
+}
