@@ -6,6 +6,7 @@
   <meta name="description" content="Interactive PyTorch deep learning digit recognition — draw a number and see a real neural network prediction.">
   <title>DigitLab — Handwritten Digit Recognition AI</title>
   <link rel="stylesheet" href="./styles.css">
+  <script src="./handwriting-mnist.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -26,7 +27,7 @@
       <section class='card draw-panel'>
         <div class='card-title'><span class='step'>01</span><div><h2>Your input</h2><p>Draw any digit from 0 to 9 with your mouse or finger.</p></div></div>
         <div class='canvas-shell'>
-          <div class='canvas-header'><span>DRAWING CANVAS</span><span class='canvas-indicator'>● 8×8 neural input</span></div>
+          <div class='canvas-header'><span>DRAWING CANVAS</span><span class='canvas-indicator'>● 8×8 / 28×28 neural input</span></div>
           <div class='canvas-area'>
             <canvas id='digit-canvas' width='280' height='280' aria-label='Draw a handwritten digit from zero to nine'></canvas>
             <div class='canvas-corner tl'></div><div class='canvas-corner tr'></div><div class='canvas-corner bl'></div><div class='canvas-corner br'></div>
@@ -37,7 +38,7 @@
           <button data-sample='0' type='button'>5</button><button data-sample='1' type='button'>2</button><button data-sample='2' type='button'>0</button>
         </div></div>
         <button id='predict' class='primary-button' type='button'>Recognize digit <span>↗</span></button>
-        <p class='helper'>The drawing is processed locally into 8×8 grayscale pixels and evaluated by the trained model.</p>
+        <p class='helper'>Freehand drawings are processed locally into 28×28 pixels for the MNIST model. Dataset samples use the original 8×8 model.</p>
       </section>
       <section class='card results-panel' aria-live='polite'>
         <div class='card-title'><span class='step'>02</span><div><h2>Model prediction</h2><p>See the network’s real output probabilities.</p></div></div>
@@ -53,15 +54,15 @@
       </section>
     </div>
     <section id='how-it-works' class='info-section'>
-      <div class='info-top'><div class='eyebrow'>BEHIND THE SCENES</div><h2>Small network.<br/><span>Real machine learning.</span></h2><p>Built with Python and PyTorch, then exported for live predictions. The same model architecture used in the training code performs the inference here.</p></div>
+      <div class='info-top'><div class='eyebrow'>BEHIND THE SCENES</div><h2>Small network.<br/><span>Real machine learning.</span></h2><p>Two genuine PyTorch neural networks trained with Python: the original 8×8 Digits classifier and a second 28×28 MNIST model for freehand writing. Both execute locally in your browser using exported weights.</p></div>
       <div class='metrics'>
-        <div><strong>96.94<span>%</span></strong><small>Accuracy on held-out test images</small></div>
-        <div><strong>1,797</strong><small>Handwritten digit samples</small></div>
-        <div><strong>30</strong><small>Training epochs</small></div>
-        <div><strong>64<span>→</span>10</strong><small>Input pixels → output classes</small></div>
+        <div><strong>96.94<span>%</span></strong><small>Original Digits model test accuracy</small></div>
+        <div><strong>98.16<span>%</span></strong><small>MNIST model held-out test accuracy</small></div>
+        <div><strong>60,000</strong><small>MNIST train + validation images</small></div>
+        <div><strong>784<span>→</span>10</strong><small>MNIST input pixels → digit classes</small></div>
       </div>
       <div class='pipeline'><div><span>01</span>Input image<br/><small>8×8 grayscale</small></div><b>→</b><div><span>02</span>Neural layers<br/><small>64 → 64 → 32</small></div><b>→</b><div><span>03</span>Prediction<br/><small>10 digit classes</small></div></div>
-      <div class='limitations'><strong>About this demo</strong><p>Trained on the small scikit-learn Digits dataset. The 96.94% accuracy was measured on 360 held-out dataset images, not live user drawings. Freehand recognition is an experimental extension and may be less accurate because the handwriting style, size and preprocessing differ.</p><a href='https://github.com/lsaiahmany1-blip/handwritten-digit-recognition' target='_blank' rel='noopener noreferrer'>View the training code and methodology ↗</a></div>
+      <div class='limitations'><strong>About this demo</strong><p>Two models are included: the 8×8 Digits network achieved 96.94% on 360 separate dataset images; the 28×28 MNIST network achieved 98.16% on 10,000 separate MNIST test images. These are separate benchmarks. Neither test result measures accuracy of live finger-drawn digits on this page. Freehand recognition is experimental and can still make mistakes.</p><a href='https://github.com/lsaiahmany1-blip/handwritten-digit-recognition' target='_blank' rel='noopener noreferrer'>View the training code and methodology ↗</a></div>
     </section>
   </main>
   <footer><span>DigitLab · A personal deep learning portfolio project</span><a href='https://github.com/lsaiahmany1-blip/handwritten-digit-recognition' target='_blank' rel='noopener noreferrer'>GitHub repository ↗</a></footer>
