@@ -127,6 +127,19 @@ def main():
     output = ROOT / "docs" / "model-mnist.json"
     output.parent.mkdir(parents=True,exist_ok=True)
     output.write_text(json.dumps(export,separators=(",",":"))+"\n",encoding="utf-8")
+    report = {
+        "dataset": "MNIST (28x28 grayscale handwriting)",
+        "training_samples": 54000,
+        "validation_samples": 6000,
+        "test_samples": 10000,
+        "test_correct": correct,
+        "test_accuracy": round(accuracy, 6),
+        "architecture": [784, 256, 128, 10],
+        "seed": SEED,
+    }
+    (ROOT / "docs" / "mnist-metrics.json").write_text(
+        json.dumps(report, indent=2) + "\\n", encoding="utf-8"
+    )
     print(f"Exported: {output}, {output.stat().st_size} bytes",flush=True)
 
 
