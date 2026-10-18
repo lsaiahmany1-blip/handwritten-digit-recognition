@@ -3,6 +3,11 @@ name: Train and evaluate digit recognition model
 on:
   push:
     branches: [main]
+    paths:
+      - 'train.py'
+      - 'predict.py'
+      - 'requirements.txt'
+      - '.github/workflows/train-and-test.yml'
   workflow_dispatch:
 
 jobs:
