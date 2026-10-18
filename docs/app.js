@@ -183,28 +183,25 @@ predictBtn.addEventListener('click',async()=>{
   errorBox.classList.add('hidden');
   try {
     const model=await modelPromise;
-    // For freehand drawings, average predictions from three centered
-    // 8x8 input crops with slightly different margins. This is real
-    // neural-network inference, never a hard-coded digit override.
-    // Verified dataset samples continue using the unchanged single view.
+    // The held-out dataset samples are evaluated by the original 8x8 model.
+    // Freehand drawings use the separately trained 28x28 MNIST network.
     if (selectedSample) {
-      displayResult(predict(pixels, model));
+      displayResult(predict(pixels,model));
+      document.querySelector('.model-note').textContent =
+        '*Using original 8x8 Digits model. Its held-out dataset accuracy is 96.94%; confidence is not a guarantee.';
     } else {
-      const marginFractions = [0.10, 0.16, 0.22];
-      const views = marginFractions.map(fraction => predict(normalizeDrawing(fraction), model));
-      const probabilities = Array.from(
-        { length: 10 },
-        (_, digit) => views.reduce((sum, result) => sum + result.probabilities[digit], 0) / views.length
-      );
-      const ranking = probabilities
-        .map((probability, digit) => ({ digit, probability }))
-        .sort((a, b) => b.probability - a.probability);
-      displayResult({
-        digit: ranking[0].digit,
-        confidence: ranking[0].probability,
-        probabilities,
-        top: ranking.slice(0, 5),
-      });
+      const handwriting = window.DigitLabMNIST
+        ? await window.DigitLabMNIST.predictCanvas(canvas) : null;
+      if (handwriting) {
+        displayResult(handwriting);
+        document.querySelector('.model-note').textContent =
+          '*Using MNIST 28x28 handwriting model (98.16% on its held-out dataset). Accuracy for freehand browser drawings is not established.';
+      } else {
+        const classic = predict(pixels,model);
+        displayResult(classic);
+        document.querySelector('.model-note').textContent =
+          '*MNIST model unavailable. Fallback: original 8x8 Digits model. Try reloading the page.';
+      }
     }
   }catch{
     showError('Could not load the network. Refresh and try again.');
