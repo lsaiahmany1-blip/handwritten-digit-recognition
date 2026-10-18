@@ -18,9 +18,26 @@ jobs:
       - name: Check JavaScript syntax and HTML presence
         run: |
           node --check docs/app.js
+          node --check docs/handwriting-mnist.js
+          test -s docs/model-mnist.json
+          test -s docs/mnist-metrics.json
           test -s docs/index.html
           test -s docs/styles.css
           test -s docs/model-web.json
+      - name: Verify separate MNIST model and measured results
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const m=JSON.parse(fs.readFileSync('docs/model-mnist.json','utf8'));
+          const info=JSON.parse(fs.readFileSync('docs/mnist-metrics.json','utf8'));
+          if(m.architecture.join(',')!=='784,256,128,10')throw Error('Invalid MNIST network');
+          if(m.test_samples!==10000 || m.test_correct!==9816)throw Error('MNIST metrics not verified');
+          if(m.test_accuracy!==info.test_accuracy)throw Error('Reported metrics disagree');
+          for(const [key,rows,columns] of [['0.weight',256,784],['3.weight',128,256],['6.weight',10,128]]) {
+            if(m.weights[key].length!==rows||m.weights[key][0].length!==columns)throw Error('Invalid '+key);
+          }
+          console.log('PASS: verified real 28x28 MNIST weights and test metrics');
+          NODE
       - name: Check exported neural network against verified samples
         run: |
           node --input-type=module <<'NODE'
